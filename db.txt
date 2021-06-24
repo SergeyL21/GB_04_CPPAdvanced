@@ -1,0 +1,10 @@
+Ivanov,Anton,Ivanovich,7,911,2050010,
+Kozlov,Dmitriy,Leonidovich,7,907,9001234,10
+Petrov,Semen,Nikolaevich,7,907,9001234,7
+Frolova,Svetlana,Olegovna,8,812,4767705,
+Sokolova,Miroslava,Sergeevna,8,921,0210777,
+Sokolova,Lada,Sergeevna,8,921,0074321,
+Zaytceva,Maria,Andreevna,4,8812,48869,
+Egorushkina,Alina,Nikolaevna,7,999,9980032,
+Anonimus,Anon,Anonimovich,65,345,35762
+Vrednaja,Anastasia,Fedorovna,7,911,2001639
