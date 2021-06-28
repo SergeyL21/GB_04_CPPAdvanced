@@ -14,7 +14,11 @@ int main(int argc, char *argv[]) {
   UNUSED(argc)
   UNUSED(argv)
 
-  TestModule::lesson1_Task3();
+  setlocale(LC_ALL, "Russian");
+
+  TestModule::lesson2_Task1();
+  TestModule::lesson2_Task2();
+  TestModule::lesson2_Task3();
 
   return 0;
 }

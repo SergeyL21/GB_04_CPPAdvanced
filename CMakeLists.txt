@@ -9,10 +9,12 @@ set(SOURCE_FILES
   main.cpp
   test_module.cpp
   lesson_1.cpp
+  lesson_2.cpp
 )
 
 set(OTHER_FILES
   db.txt
+  war_and_peace_pt1.txt
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
@@ -21,3 +23,8 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy
                    ${CMAKE_CURRENT_SOURCE_DIR}/db.txt
                    $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+                  COMMAND ${CMAKE_COMMAND} -E copy
+                  ${CMAKE_CURRENT_SOURCE_DIR}/war_and_peace_pt1.txt
+                  $<TARGET_FILE_DIR:${PROJECT_NAME}>)
