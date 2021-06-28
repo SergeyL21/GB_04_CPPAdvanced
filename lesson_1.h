@@ -8,9 +8,9 @@
  */
 #pragma once
 
-#include <string>
-#include <optional>
 #include <fstream>
+#include <optional>
+#include <string>
 #include <vector>
 
 namespace lesson_1 {
@@ -23,8 +23,8 @@ struct Person {
 
   Person() = default;
   inline Person(const std::string &_surname, const std::string &_first_name,
-         const std::optional<std::string> &_middle_name = std::nullopt) :
-    surname(_surname), first_name(_first_name), middle_name(_middle_name) {}
+                const std::optional<std::string> &_middle_name = std::nullopt)
+      : surname(_surname), first_name(_first_name), middle_name(_middle_name) {}
   ~Person() = default;
 
   friend std::ostream &operator<<(std::ostream &s, const Person &person);
@@ -56,7 +56,7 @@ struct PhoneNumber {
 
 // --------------------------------------------------------------------------------------
 class PhoneBook {
-public:
+ public:
   PhoneBook(std::ifstream &file);
 
   friend std::ostream &operator<<(std::ostream &s, const PhoneBook &rhs);
@@ -66,9 +66,9 @@ public:
   std::tuple<std::string, PhoneNumber> GetPhoneNumber(const std::string &surname) const;
   bool ChangePhoneNumber(const Person &person, const PhoneNumber &phone_number);
 
-private:
+ private:
   using data_pair = std::pair<Person, PhoneNumber>;
   std::vector<data_pair> m_data;
 };
 
-} // namespace lesson_1
+}  // namespace lesson_1

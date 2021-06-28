@@ -7,10 +7,11 @@
  * Author: Sergey Lola
  */
 #include "lesson_1.h"
-#include "test_module.h"
 
 #include <iomanip>
 #include <regex>
+
+#include "test_module.h"
 
 using namespace std;
 
@@ -25,11 +26,8 @@ const char FILE_FORMAT_DELIMITER{','};
 // -------------------------- Person class implementation -------------------------------
 // --------------------------------------------------------------------------------------
 ostream &operator<<(ostream &s, const Person &person) {
-  s << setw(OUTPUT_OFFSET) <<
-       person.surname <<
-       setw(OUTPUT_OFFSET) <<
-       person.first_name <<
-       setw(OUTPUT_OFFSET);
+  s << setw(OUTPUT_OFFSET) << person.surname << setw(OUTPUT_OFFSET) << person.first_name
+    << setw(OUTPUT_OFFSET);
   return person.middle_name ? (s << *person.middle_name) : s;
 }
 
@@ -55,10 +53,8 @@ bool Person::operator==(const Person &rhs) const {
 // ------------------------ PhoneNumber class implementation ----------------------------
 // --------------------------------------------------------------------------------------
 ostream &operator<<(ostream &s, const PhoneNumber &rhs) {
-  return s << "+" << rhs.country_code <<
-              "(" << rhs.city_code << ")" <<
-              rhs.number <<
-              (rhs.extra ? string{" "}.append(to_string(*rhs.extra)) : string{});
+  return s << "+" << rhs.country_code << "(" << rhs.city_code << ")" << rhs.number
+           << (rhs.extra ? string{" "}.append(to_string(*rhs.extra)) : string{});
 }
 
 // --------------------------------------------------------------------------------------
@@ -100,17 +96,32 @@ PhoneBook::PhoneBook(ifstream &file) {
       PhoneNumber phone_number;
       for (auto word_it = words.cbegin(); word_it != words.cend(); ++word_it, ++index) {
         switch (index) {
-          case 0: person.surname = *word_it;                           break;
-          case 1: person.first_name = *word_it;                        break;
-          case 2: person.middle_name = make_optional(*word_it);        break;
-          case 3: phone_number.country_code = stoi(*word_it);          break;
-          case 4: phone_number.city_code = stoi(*word_it);             break;
-          case 5: phone_number.number = *word_it;                      break;
-          case 6: phone_number.extra = make_optional(stoi(*word_it));  break;
+          case 0:
+            person.surname = *word_it;
+            break;
+          case 1:
+            person.first_name = *word_it;
+            break;
+          case 2:
+            person.middle_name = make_optional(*word_it);
+            break;
+          case 3:
+            phone_number.country_code = stoi(*word_it);
+            break;
+          case 4:
+            phone_number.city_code = stoi(*word_it);
+            break;
+          case 5:
+            phone_number.number = *word_it;
+            break;
+          case 6:
+            phone_number.extra = make_optional(stoi(*word_it));
+            break;
         }
       }
       m_data.push_back(make_pair(person, phone_number));
     }
+    file.close();
   }
 }
 
@@ -145,16 +156,15 @@ std::tuple<string, PhoneNumber> PhoneBook::GetPhoneNumber(const string &surname)
     }
   });
 
-  const auto key{1 == counter ? string{} :
-                                (0 == counter ? "not found" : "found more than 1")};
+  const auto key{1 == counter ? string{}
+                              : (0 == counter ? "not found" : "found more than 1")};
   return make_tuple(key, value);
 }
 
 // --------------------------------------------------------------------------------------
-bool PhoneBook::ChangePhoneNumber(const Person &person,
-                                  const PhoneNumber &phone_number) {
+bool PhoneBook::ChangePhoneNumber(const Person &person, const PhoneNumber &phone_number) {
   auto it = find_if(m_data.begin(), m_data.end(),
-    [&person](const auto &p) -> bool { return p.first == person; });
+                    [&person](const auto &p) -> bool { return p.first == person; });
   if (it != m_data.end()) {
     (*it).second = phone_number;
     return true;
@@ -162,4 +172,4 @@ bool PhoneBook::ChangePhoneNumber(const Person &person,
   return false;
 }
 
-} // namespace lesson_1
+}  // namespace lesson_1

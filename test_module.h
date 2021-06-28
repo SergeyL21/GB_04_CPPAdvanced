@@ -22,7 +22,6 @@
 #undef UNUSED
 #define UNUSED(X) (void)(X);
 
-
 namespace utils {
 // ---------------------------------------------------------------------------
 // вспомогательная шаблонная функция разделения строк по символу-разделителю
@@ -35,11 +34,19 @@ void splitString(const std::string &s, char delim, Out result) {
   }
 }
 
-} // namespace utils
+// ---------------------------------------------------------------------------
+// вспомогательная шаблонная функция табулирования потока вывода
+template <typename _CharT, typename _Traits>
+inline std::basic_ostream<_CharT, _Traits> &tab(std::basic_ostream<_CharT, _Traits> &os) {
+  return os.put(os.widen('\t'));
+}
+
+}  // namespace utils
 
 class TestModule {
-
-public:
+ public:
   static void lesson1_Task3();
+  static void lesson2_Task1();
+  static void lesson2_Task2();
+  static void lesson2_Task3();
 };
-
