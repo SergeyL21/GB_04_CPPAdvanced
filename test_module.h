@@ -41,12 +41,39 @@ inline std::basic_ostream<_CharT, _Traits> &tab(std::basic_ostream<_CharT, _Trai
   return os.put(os.widen('\t'));
 }
 
+// ---------------------------------------------------------------------------
+// вспомогательная шаблонная функция для вывода в консоль значения
+template <typename T>
+std::ostream &print(std::ostream &out, T const &value) {
+  return (out << value << ' ');
+}
+
+// ---------------------------------------------------------------------------
+// вспомогательная шаблонная функция для вывода в консоль пары значений
+template <typename T1, typename T2>
+std::ostream &print(std::ostream &out, std::pair<T1, T2> const &value) {
+  return (out << '{' << value.first << ", " << value.second << "} ");
+}
+
+// ---------------------------------------------------------------------------
+// вспомогательная шаблонная функция для вывода в консоль любого контейнера
+template <template<typename, typename...> class TT, typename... Args>
+std::ostream &print(std::ostream &out, TT<Args...> const &container) {
+  for (auto &&element : container) print(out, element);
+  return out;
+}
+
 }  // namespace utils
 
 class TestModule {
  public:
   static void lesson1_Task3();
+
   static void lesson2_Task1();
   static void lesson2_Task2();
   static void lesson2_Task3();
+
+  static void lesson3_Task1();
+  static void lesson3_Task2();
+  static void lesson3_Task3();
 };
