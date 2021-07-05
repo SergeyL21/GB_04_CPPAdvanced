@@ -15,6 +15,7 @@
 
 #include "lesson_1.h"
 #include "lesson_2.h"
+#include "lesson_3.h"
 
 using namespace std;
 
@@ -165,5 +166,44 @@ void TestModule::lesson2_Task3() {
     cout << "Vowels counter: " << counter << endl << endl;
 
     file.close();
+  }
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson3_Task1() {
+  using namespace lesson_3;
+  cout << "--- TASK 1 ---" << endl;
+  list<int> l {1, 2, 3, 4, 5};
+  cout << "Before: ";
+  utils::print(OUT cout, l);
+  cout << endl;
+  accumulateAndAppend(OUT l);
+  cout << "After: ";
+  utils::print(OUT cout, l);
+  cout << endl << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson3_Task2() {
+  using namespace lesson_3;
+  cout << "--- TASK 2 ---" << endl;
+
+  SquareMatrix<int> m1{{2, 2, 2, 2}, {1, 4, 1, 4}, {3, 5, 2, 3}, {5, 5, 4, 2}};
+  cout << "Origin matrix M1: " << endl << m1;
+  cout << "Determinant M1: " << m1.determinant() << endl << endl;
+
+  SquareMatrix<double> m2{{0.5, 0.5}, {2.5, 4.35}};
+  cout << "Origin matrix M2: " << endl << m2;
+  cout << "Determinant M2: " << m2.determinant() << endl << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson3_Task3() {
+  using namespace lesson_3;
+  cout << "--- TASK 3 ---" << endl;
+  TestContainer<int> container{1, 2, 3, 4, 5};
+  cout << "For-range-based cycle: ";
+  for (const auto &element : container) {
+    cout << element << ' ';
   }
 }

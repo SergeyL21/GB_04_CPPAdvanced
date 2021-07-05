@@ -10,6 +10,7 @@ set(SOURCE_FILES
   test_module.cpp
   lesson_1.cpp
   lesson_2.cpp
+  lesson_3.cpp
 )
 
 set(OTHER_FILES
