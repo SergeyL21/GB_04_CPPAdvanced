@@ -12,10 +12,13 @@
 #include <fstream>
 #include <iomanip>
 #include <tuple>
+#include <deque>
+#include <random>
 
 #include "lesson_1.h"
 #include "lesson_2.h"
 #include "lesson_3.h"
+#include "lesson_4.h"
 
 using namespace std;
 
@@ -206,4 +209,86 @@ void TestModule::lesson3_Task3() {
   for (const auto &element : container) {
     cout << element << ' ';
   }
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson4_Task1() {
+  using namespace lesson_4;
+  cout << "--- TASK 1 ---" << endl;
+
+  const auto insert_value1{3};
+  vector<int> test_c1{1, 2, 4, 5};
+  cout << "Test container 1 (vector) - before: ";
+  utils::print(OUT cout, test_c1);
+  cout << endl;
+  insert_sorted(OUT test_c1, insert_value1);
+  cout << "Insert value = " << insert_value1 << endl;
+  cout << "Test container 1 (vector) - after:  ";
+  utils::print(OUT cout, test_c1);
+  cout << endl << endl;
+
+  const auto insert_value2{5};
+  list<int> test_c2{2, 3, 4, 7, 8};
+  cout << "Test container 2 (list) - before: ";
+  utils::print(OUT cout, test_c2);
+  cout << endl;
+  insert_sorted(OUT test_c2, insert_value2);
+  cout << "Insert value = " << insert_value2 << endl;
+  cout << "Test container 2 (list) - after:  ";
+  utils::print(OUT cout, test_c2);
+  cout << endl << endl;
+
+  const auto insert_value3{0.9f};
+  deque<float> test_c3{0.3f, 0.5f, 1.1f, 1.4f};
+  cout << "Test container 3 (deque) - before: ";
+  utils::print(OUT cout, test_c3);
+  cout << endl;
+  insert_sorted(OUT test_c3, insert_value3);
+  cout << "Insert value = " << insert_value3 << endl;
+  cout << "Test container 3 (deque) - after:  ";
+  utils::print(OUT cout, test_c3);
+  cout << endl << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson4_Task2() {
+  using namespace lesson_4;
+  cout << "--- TASK 2 ---" << endl;
+  cout << fixed << setprecision(2);
+
+  // генерация массива синусоидального аналового сигнала
+  vector<double> analog_data(100);
+  random_device rnd_device;
+  mt19937 generator{rnd_device()};
+  uniform_int_distribution<> dis(0, 180);
+  int dt{0};
+  generate(analog_data.begin(), analog_data.end(), [&generator, &dis, &dt](){
+    const auto fi = dis(generator);
+    return 10 * sin(2. * M_PI * (dt++) + fi);
+  });
+
+  // создания массива цифрового сигнала, путем откидывания дробного значения из
+  // массива аналоговых сигналов
+  vector<int> digital_data(analog_data.cbegin(), analog_data.cend());
+  //transform(analog_data.cbegin(), analog_data.cend(), digital_data.begin(),
+  //          [](auto value) { return static_cast<int>(value); });
+  cout << "Print analog signals array: ";
+  utils::print(OUT cout, analog_data);
+  cout << endl << endl;
+  cout << "Print digital signals array: ";
+  utils::print(OUT cout, digital_data);
+  cout << endl << endl;
+
+  // подсчет ошибки
+  const auto D = inner_product(
+    analog_data.cbegin(),
+    analog_data.cend(),
+    digital_data.cbegin(),
+    0.,
+    std::plus<double>(),
+    [](const auto &a, const auto &b) {
+      return pow(a - b, 2);
+    }
+  );
+  cout << "D: " << D << endl;
 }

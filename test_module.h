@@ -76,4 +76,7 @@ class TestModule {
   static void lesson3_Task1();
   static void lesson3_Task2();
   static void lesson3_Task3();
+
+  static void lesson4_Task1();
+  static void lesson4_Task2();
 };
