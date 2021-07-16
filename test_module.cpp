@@ -13,12 +13,15 @@
 #include <iomanip>
 #include <tuple>
 #include <deque>
+#include <forward_list>
 #include <random>
+#include <map>
 
 #include "lesson_1.h"
 #include "lesson_2.h"
 #include "lesson_3.h"
 #include "lesson_4.h"
+#include "lesson_5.h"
 
 using namespace std;
 
@@ -291,4 +294,65 @@ void TestModule::lesson4_Task2() {
     }
   );
   cout << "D: " << D << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson5_Task1() {
+  using namespace lesson_5;
+  cout << "--- TASK 1 ---" << endl;
+
+  // Input Iterator
+  vector<string> seq_1 {"bow", "sword", "crossbow", "gun", "pike", "sword", "bow"};
+  cout << "Print sequence of unique words - test 1 (input iterator)" << endl;
+  cout << " Before: ";
+  copy(seq_1.cbegin(), seq_1.cend(), ostream_iterator<string>{OUT cout, " "});
+  cout << endl << " After:  ";
+  printUnique(seq_1.begin(), seq_1.end());
+  cout << endl << endl;
+
+  // Bidirectional Iterator
+  list<string> seq_2 { "alpha", "beta", "gamma", "omega", "alpha", "beta", "epsilon" };
+  cout << "Print sequence of unique words - test 2 (bidirectional iterator)" << endl;
+  cout << " Before: ";
+  copy(seq_2.cbegin(), seq_2.cend(), ostream_iterator<string>{OUT cout, " "});
+  cout << endl << " After:  ";
+  printUnique(seq_2.begin(), seq_2.end());
+  cout << endl << endl;
+
+  forward_list<string> seq_3 { "1", "0", "00", "11", "1", "01", "0", "10"};
+  cout << "Print sequence of unique words - test 3 (forward iterator)" << endl;
+  cout << " Before: ";
+  copy(seq_3.cbegin(), seq_3.cend(), ostream_iterator<string>{OUT cout, " "});
+  cout << endl << " After:  ";
+  printUnique(seq_3.begin(), seq_3.end());
+  cout << endl << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson5_Task2() {
+  using namespace lesson_5;
+  cout << "--- TASK 2 ---" << endl;
+
+  string input;
+  cout << "Input any text separated into the sentences ('.', '?', '!', '...', '!!!'):" << endl;
+  getline(OUT cin, OUT input);
+  multimap<size_t, string> sentenses;
+  // разбор введенных данных на предложения
+  // разделители предложений: '.', '?', '!', '...', '!!!'
+  const string delimiters {".?!...!!!"};
+  size_t start{input.find_first_not_of(delimiters)}, end{};
+  while (start != string::npos) {
+    end = input.find_first_of(delimiters, start);
+    // пропускаем все следующие вхождения разделителей и начинаем поиск нового предложения
+    auto sentence = input.substr(start, end - start);
+    // удаление лишнего пробела спереди
+    sentence.erase(0, sentence.find_first_not_of(' '));
+    // добавляем полученное предложение в multimap
+    sentenses.insert(make_pair(sentence.size(), sentence));
+    // пропускаем все следующие вхождения разделителей и начинаем поиск нового предложения
+    start = input.find_first_not_of(delimiters, end);
+  }
+
+  cout << endl << "Parsing the entered sentences:" << endl;
+  utils::print(OUT cout, sentenses, '\n');
 }
