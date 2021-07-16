@@ -44,22 +44,28 @@ inline std::basic_ostream<_CharT, _Traits> &tab(std::basic_ostream<_CharT, _Trai
 // ---------------------------------------------------------------------------
 // вспомогательная шаблонная функция для вывода в консоль значения
 template <typename T>
-std::ostream &print(std::ostream &out, T const &value) {
-  return (out << value << ' ');
+std::ostream &print(std::ostream &out,
+                    T const &value,
+                    char separator = char{}) {
+  return (out << value << separator);
 }
 
 // ---------------------------------------------------------------------------
 // вспомогательная шаблонная функция для вывода в консоль пары значений
 template <typename T1, typename T2>
-std::ostream &print(std::ostream &out, std::pair<T1, T2> const &value) {
-  return (out << '{' << value.first << ", " << value.second << "} ");
+std::ostream &print(std::ostream &out,
+                    std::pair<T1, T2> const &value,
+                    char separator = char{}) {
+  return (out << '{' << value.first << ", " << value.second << "}" << separator);
 }
 
 // ---------------------------------------------------------------------------
 // вспомогательная шаблонная функция для вывода в консоль любого контейнера
 template <template<typename, typename...> class TT, typename... Args>
-std::ostream &print(std::ostream &out, TT<Args...> const &container) {
-  for (auto &&element : container) print(out, element);
+std::ostream &print(std::ostream &out,
+                    TT<Args...> const &container,
+                    char separator = char{}) {
+  for (auto &&element : container) print(out, element, separator);
   return out;
 }
 
@@ -79,4 +85,7 @@ class TestModule {
 
   static void lesson4_Task1();
   static void lesson4_Task2();
+
+  static void lesson5_Task1();
+  static void lesson5_Task2();
 };
