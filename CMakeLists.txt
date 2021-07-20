@@ -12,6 +12,7 @@ set(SOURCE_FILES
   lesson_2.cpp
   lesson_3.cpp
   lesson_4.cpp
+  lesson_5.cpp
 )
 
 set(OTHER_FILES
