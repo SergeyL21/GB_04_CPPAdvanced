@@ -254,17 +254,14 @@ void TestModule::lesson4_Task1() {
 void TestModule::lesson4_Task2() {
   using namespace lesson_4;
   cout << "--- TASK 2 ---" << endl;
-  cout << fixed << setprecision(2);
+  cout /*<< fixed*/ << setprecision(2);
 
   // генерация массива синусоидального аналового сигнала
   vector<double> analog_data(100);
-  random_device rnd_device;
-  mt19937 generator{rnd_device()};
-  uniform_int_distribution<> dis(0, 180);
-  int dt{0};
-  generate(analog_data.begin(), analog_data.end(), [&generator, &dis, &dt](){
-    const auto fi = dis(generator);
-    return 10 * sin(2. * M_PI * (dt++) + fi);
+  double dt{0.};
+  generate(analog_data.begin(), analog_data.end(), [&dt](){
+    dt += 0.1;
+    return 3. * sin(dt * M_PI_2 + 5.);
   });
 
   // создания массива цифрового сигнала, путем откидывания дробного значения из
