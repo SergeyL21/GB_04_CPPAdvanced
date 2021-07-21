@@ -88,4 +88,6 @@ class TestModule {
 
   static void lesson5_Task1();
   static void lesson5_Task2();
+
+  static void lesson6_Task1();
 };

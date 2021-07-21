@@ -16,12 +16,14 @@
 #include <forward_list>
 #include <random>
 #include <map>
+#include <thread>
 
 #include "lesson_1.h"
 #include "lesson_2.h"
 #include "lesson_3.h"
 #include "lesson_4.h"
 #include "lesson_5.h"
+#include "lesson_6.h"
 
 using namespace std;
 
@@ -352,4 +354,25 @@ void TestModule::lesson5_Task2() {
 
   cout << endl << "Parsing the entered sentences:" << endl;
   utils::print(OUT cout, sentenses, '\n');
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson6_Task1() {
+  using namespace lesson_6;
+  cout << "--- TASK 1 ---" << endl;
+
+  OutputWrapper pcout{OUT cout};
+  auto func = [&pcout](int local_id) {
+    for (size_t i{0u}; i < 5; ++i) {
+      pcout << "thread-safe cout: th" << local_id <<
+               " is in " << i << " iteration" << endl;
+      this_thread::sleep_for(500ms);
+    }
+  };
+  thread th1(func, 1);
+  thread th2(func, 2);
+  thread th3(func, 3);
+  th1.join();
+  th2.join();
+  th3.join();
 }
