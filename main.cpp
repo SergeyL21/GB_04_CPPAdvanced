@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
   setlocale(LC_ALL, "Russian");
 
   TestModule::lesson6_Task1();
+  TestModule::lesson6_Task2();
 
   return 0;
 }

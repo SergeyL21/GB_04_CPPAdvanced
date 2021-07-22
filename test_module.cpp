@@ -17,6 +17,7 @@
 #include <random>
 #include <map>
 #include <thread>
+#include <future>
 
 #include "lesson_1.h"
 #include "lesson_2.h"
@@ -375,4 +376,46 @@ void TestModule::lesson6_Task1() {
   th1.join();
   th2.join();
   th3.join();
+
+  pcout << endl << endl;
+}
+
+// --------------------------------------------------------------------------------------'
+void TestModule::lesson6_Task2() {
+  using namespace lesson_6;
+  cout << "--- TASK 2 ---" << endl;
+
+  OutputWrapper pcout{OUT cout};
+  auto isPrime = [](uint64_t number) -> bool {
+    for (uint64_t i{3ull}; (i*i) <= number; i += 2ull) {
+      if (!(number % i)) return false;
+    }
+    return true;
+  };
+
+  auto getPrimeNumberByIndex = [isPrime, &pcout](uint64_t index) -> uint64_t {
+    // кол-во вызовов информации о прогрессе расчета
+    const auto sections{20};
+    const auto div{index / sections};
+    // если индекс равен единице, то нет смысла производить расчеты и
+    // выводим первое простое число = 2
+    if (1u == index) return 2u;
+    uint64_t number{1ull}, counter{1ull};
+    while (counter < index) {
+      number += 2ull;
+      if (isPrime(number)) {
+        if (!(++counter % div)) {
+          pcout << "Progress " << double(counter) / div * (100. / sections) << "%" << endl;
+        }
+      }
+    }
+    return number;
+  };
+
+  const auto prime_index{1'000'000};
+  pcout << "Start prime number calculating: index i = " << prime_index << endl;
+  auto futurePrimeRes(async(launch::async, getPrimeNumberByIndex, prime_index));
+  const auto result = futurePrimeRes.get();
+  pcout << "End prime number calculating: result of index i = " << prime_index << " is " <<
+           result << endl;
 }
