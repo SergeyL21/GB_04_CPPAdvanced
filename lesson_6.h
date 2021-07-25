@@ -10,6 +10,9 @@
 
 #include <ostream>
 #include <mutex>
+#include <vector>
+#include <map>
+#include <iostream>
 
 namespace lesson_6 {
 
@@ -38,6 +41,27 @@ public:
 
 private:
   std::ostream &m_stream;
+  std::mutex m_mutex;
+};
+
+// --------------------------------------------------------------------------------------
+class Home {
+public:
+  struct Item {
+    std::string name;
+    int worth{0};
+
+    inline Item() {}
+    inline Item(const std::string &_name, int _worth) : name(_name), worth(_worth) {}
+
+    friend std::ostream &operator<<(std::ostream &stream, const Item &item);
+  };
+
+  void addItem(const Item &item, const std::string &person = {});
+  Item takeWorthItem(const std::string &person = {});
+
+private:
+  std::multimap<int, Item> m_items;
   std::mutex m_mutex;
 };
 
