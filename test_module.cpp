@@ -16,12 +16,15 @@
 #include <forward_list>
 #include <random>
 #include <map>
+#include <thread>
+#include <future>
 
 #include "lesson_1.h"
 #include "lesson_2.h"
 #include "lesson_3.h"
 #include "lesson_4.h"
 #include "lesson_5.h"
+#include "lesson_6.h"
 
 using namespace std;
 
@@ -352,4 +355,112 @@ void TestModule::lesson5_Task2() {
 
   cout << endl << "Parsing the entered sentences:" << endl;
   utils::print(OUT cout, sentenses, '\n');
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson6_Task1() {
+  using namespace lesson_6;
+  cout << "--- TASK 1 ---" << endl;
+
+  OutputWrapper pcout{OUT cout};
+  auto func = [&pcout](int local_id) {
+    for (size_t i{0u}; i < 5; ++i) {
+      pcout << "thread-safe cout: th" << local_id <<
+               " is in " << i << " iteration" << endl;
+      this_thread::sleep_for(500ms);
+    }
+  };
+  thread th1(func, 1);
+  thread th2(func, 2);
+  thread th3(func, 3);
+  th1.join();
+  th2.join();
+  th3.join();
+
+  pcout << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson6_Task2() {
+  using namespace lesson_6;
+  cout << "--- TASK 2 ---" << endl;
+
+  OutputWrapper pcout{OUT cout};
+  auto isPrime = [](uint64_t number) -> bool {
+    for (uint64_t i{3ull}; (i*i) <= number; i += 2ull) {
+      if (!(number % i)) return false;
+    }
+    return true;
+  };
+
+  auto getPrimeNumberByIndex = [isPrime, &pcout](uint64_t index) -> uint64_t {
+    // кол-во вызовов информации о прогрессе расчета
+    const auto sections{20};
+    const auto div{index / sections};
+    // если индекс равен единице, то нет смысла производить расчеты и
+    // выводим первое простое число = 2
+    if (1u == index) return 2u;
+    uint64_t number{1ull}, counter{1ull};
+    while (counter < index) {
+      number += 2ull;
+      if (isPrime(number)) {
+        if (!(++counter % div)) {
+          pcout << "Progress " << double(counter) / div * (100. / sections) << "%" << endl;
+        }
+      }
+    }
+    return number;
+  };
+
+  const auto prime_index{1'000'000};
+  pcout << "Start prime number calculating: index i = " << prime_index << endl;
+  auto futurePrimeRes(async(launch::async, getPrimeNumberByIndex, prime_index));
+  const auto result{futurePrimeRes.get()};
+  pcout << "End prime number calculating: result of index i = " << prime_index << " is " <<
+           result << endl << endl;
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson6_Task3() {
+  using namespace lesson_6;
+  cout << "--- TASK 3 ---" << endl;
+
+  Home home;
+  const auto MASTER_NAME{"MASTER"};
+  const auto THIEF_NAME{"THIEF"};
+  // кол-во предметов, которые принесет хозяин
+  const auto MAX_MASTER_ITEMS{10u};
+  // кол-во проникновений вора в дом хозяина
+  const auto MAX_THIEF_VISITS{5u};
+  // интервал времени через которое хозяин принесет новую вещь
+  const auto MASTER_INTERVAL{10ms};
+
+  thread th_master{[=, &home]() {
+    const auto seed{chrono::steady_clock::now().time_since_epoch().count() + 1ll};
+    mt19937 generator{seed};
+    // разброс значений для ценности вещи
+    uniform_int_distribution<> distr{0, 10};
+    for (size_t n{0u}; n < MAX_MASTER_ITEMS; ++n) {
+      this_thread::sleep_for(MASTER_INTERVAL);
+      // генерируем вещь
+      Home::Item item{{"item " + to_string(n + 1)}, distr(OUT generator)};
+      // добавляем в дом
+      home.addItem(item, MASTER_NAME);
+    }
+  }};
+
+  thread th_thief{[=, &home](){
+    const auto seed{chrono::steady_clock::now().time_since_epoch().count() + 2ll};
+    mt19937 generator{seed};
+    // разброс промежутков времени, через которые вор наведывается к хозяину
+    uniform_int_distribution<> distr{16, 21};
+    for (size_t n{0u}; n < MAX_THIEF_VISITS; ++n) {
+      this_thread::sleep_for(chrono::milliseconds{distr(OUT generator)});
+      // вор забирает одну самую ценную вещь
+      home.takeWorthItem(THIEF_NAME);
+    }
+  }};
+
+  th_master.join();
+  th_thief.join();
 }
