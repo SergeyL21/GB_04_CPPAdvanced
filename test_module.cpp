@@ -8,6 +8,9 @@
  */
 #include "test_module.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #include <cstring>
 #include <fstream>
 #include <iomanip>
@@ -437,7 +440,7 @@ void TestModule::lesson6_Task3() {
 
   thread th_master{[=, &home]() {
     const auto seed{chrono::steady_clock::now().time_since_epoch().count() + 1ll};
-    mt19937 generator{seed};
+    mt19937_64 generator{uint64_t(seed)};
     // разброс значений для ценности вещи
     uniform_int_distribution<> distr{0, 10};
     for (size_t n{0u}; n < MAX_MASTER_ITEMS; ++n) {
@@ -451,7 +454,7 @@ void TestModule::lesson6_Task3() {
 
   thread th_thief{[=, &home](){
     const auto seed{chrono::steady_clock::now().time_since_epoch().count() + 2ll};
-    mt19937 generator{seed};
+    mt19937_64 generator{uint64_t(seed)};
     // разброс промежутков времени, через которые вор наведывается к хозяину
     uniform_int_distribution<> distr{16, 21};
     for (size_t n{0u}; n < MAX_THIEF_VISITS; ++n) {

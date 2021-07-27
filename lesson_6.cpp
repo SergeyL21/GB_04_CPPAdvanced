@@ -23,7 +23,7 @@ std::ostream &operator<<(ostream &stream, const Home::Item &item) {
 void Home::addItem(const Home::Item &item, const std::string &person) {
   std::lock_guard guard{m_mutex};
   m_items.emplace(make_pair(item.worth, item));
-  cout << "Add to item [" << person << "]: " << item << endl;
+  cout << "Add to item [" << person.c_str() << "]: " << item << endl;
 }
 
 // --------------------------------------------------------------------------------------
@@ -32,10 +32,10 @@ Home::Item Home::takeWorthItem(const std::string &person) {
   if (!m_items.empty()) {
     Home::Item item{m_items.rbegin()->second};
     m_items.erase(--m_items.end());
-    cout << "Take item from home [" << person << "]: " << item << endl;
+    cout << "Take item from home [" << person.c_str() << "]: " << item << endl;
     return item;
   }
-  cout << "It's nothing to take from home [" << person << "]" << endl;
+  cout << "It's nothing to take from home [" << person.c_str() << "]" << endl;
   return {};
 }
 
