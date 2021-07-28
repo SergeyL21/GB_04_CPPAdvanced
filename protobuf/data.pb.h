@@ -399,13 +399,13 @@ class Student final :
       ::pb::FullName* fullname);
   ::pb::FullName* unsafe_arena_release_fullname();
 
-  // uint32 average_score = 3;
+  // double average_score = 3;
   void clear_average_score();
-  ::PROTOBUF_NAMESPACE_ID::uint32 average_score() const;
-  void set_average_score(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  double average_score() const;
+  void set_average_score(double value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_average_score() const;
-  void _internal_set_average_score(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  double _internal_average_score() const;
+  void _internal_set_average_score(double value);
   public:
 
   // @@protoc_insertion_point(class_scope:pb.Student)
@@ -418,7 +418,7 @@ class Student final :
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::uint32 > scores_;
   mutable std::atomic<int> _scores_cached_byte_size_;
   ::pb::FullName* fullname_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 average_score_;
+  double average_score_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_data_2eproto;
 };
@@ -855,22 +855,22 @@ Student::mutable_scores() {
   return _internal_mutable_scores();
 }
 
-// uint32 average_score = 3;
+// double average_score = 3;
 inline void Student::clear_average_score() {
-  average_score_ = 0u;
+  average_score_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 Student::_internal_average_score() const {
+inline double Student::_internal_average_score() const {
   return average_score_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 Student::average_score() const {
+inline double Student::average_score() const {
   // @@protoc_insertion_point(field_get:pb.Student.average_score)
   return _internal_average_score();
 }
-inline void Student::_internal_set_average_score(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void Student::_internal_set_average_score(double value) {
   
   average_score_ = value;
 }
-inline void Student::set_average_score(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void Student::set_average_score(double value) {
   _internal_set_average_score(value);
   // @@protoc_insertion_point(field_set:pb.Student.average_score)
 }

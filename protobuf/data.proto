@@ -10,7 +10,7 @@ message FullName {
 message Student {
 	FullName fullname = 1;
 	repeated uint32 scores = 2;
-	uint32 average_score = 3;
+  double average_score = 3;
 }
 
 message StudentGroup {

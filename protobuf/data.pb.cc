@@ -36,7 +36,7 @@ constexpr Student::Student(
   : scores_()
   , _scores_cached_byte_size_()
   , fullname_(nullptr)
-  , average_score_(0u){}
+  , average_score_(0){}
 struct StudentDefaultTypeInternal {
   constexpr StudentDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -107,7 +107,7 @@ const char descriptor_table_protodef_data_2eproto[] PROTOBUF_SECTION_VARIABLE(pr
   "\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\027\n\npatronymic\030\003 \001(\tH"
   "\000\210\001\001B\r\n\013_patronymic\"P\n\007Student\022\036\n\010fullna"
   "me\030\001 \001(\0132\014.pb.FullName\022\016\n\006scores\030\002 \003(\r\022\025"
-  "\n\raverage_score\030\003 \001(\r\"-\n\014StudentGroup\022\035\n"
+  "\n\raverage_score\030\003 \001(\001\"-\n\014StudentGroup\022\035\n"
   "\010students\030\001 \003(\0132\013.pb.Studentb\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_data_2eproto_once;
@@ -497,7 +497,7 @@ void Student::Clear() {
     delete fullname_;
   }
   fullname_ = nullptr;
-  average_score_ = 0u;
+  average_score_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -524,11 +524,11 @@ const char* Student::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // uint32 average_score = 3;
+      // double average_score = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
-          average_score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
+          average_score_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
         } else goto handle_unusual;
         continue;
       default: {
@@ -577,10 +577,10 @@ failure:
     }
   }
 
-  // uint32 average_score = 3;
-  if (this->average_score() != 0) {
+  // double average_score = 3;
+  if (!(this->average_score() <= 0 && this->average_score() >= 0)) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(3, this->_internal_average_score(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_average_score(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -621,11 +621,9 @@ size_t Student::ByteSizeLong() const {
         *fullname_);
   }
 
-  // uint32 average_score = 3;
-  if (this->average_score() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32Size(
-        this->_internal_average_score());
+  // double average_score = 3;
+  if (!(this->average_score() <= 0 && this->average_score() >= 0)) {
+    total_size += 1 + 8;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -663,7 +661,7 @@ void Student::MergeFrom(const Student& from) {
   if (from.has_fullname()) {
     _internal_mutable_fullname()->::pb::FullName::MergeFrom(from._internal_fullname());
   }
-  if (from.average_score() != 0) {
+  if (!(from.average_score() <= 0 && from.average_score() >= 0)) {
     _internal_set_average_score(from._internal_average_score());
   }
 }
