@@ -4,6 +4,9 @@ project(GB_CppAdvanced)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED ON)
+
+#set(CMAKE_ENABLE_PROTOBUF_SECTION ON)
 
 set(SOURCE_FILES
   main.cpp
@@ -14,14 +17,28 @@ set(SOURCE_FILES
   lesson_4.cpp
   lesson_5.cpp
   lesson_6.cpp
+  lesson_7.cpp
 )
 
 set(OTHER_FILES
   db.txt
   war_and_peace_pt1.txt
+  protobuf/data.proto
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
+if (CMAKE_ENABLE_PROTOBUF_SECTION)
+  add_definitions(-DENABLE_PROTOBUF_SECTION)
+  list(APPEND SOURCE_FILES protobuf/data.pb.cc)
+  #include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+
+  include(protobuf/conan/conanbuildinfo.cmake)
+  add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
+
+  target_include_directories(${PROJECT_NAME} PUBLIC ${CONAN_INCLUDE_DIRS_PROTOBUF})
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS_PROTOBUF}/libprotobuf.lib)
+else()
+  add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
+endif()
 
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy

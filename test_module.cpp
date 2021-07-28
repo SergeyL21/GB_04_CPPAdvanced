@@ -8,6 +8,9 @@
  */
 #include "test_module.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #include <cstring>
 #include <fstream>
 #include <iomanip>
@@ -25,6 +28,11 @@
 #include "lesson_4.h"
 #include "lesson_5.h"
 #include "lesson_6.h"
+#include "lesson_7.h"
+
+#ifdef ENABLE_PROTOBUF_SECTION
+#include "protobuf/data.pb.h"
+#endif // ENABLE_PROTOBUF_SECTION
 
 using namespace std;
 
@@ -437,7 +445,7 @@ void TestModule::lesson6_Task3() {
 
   thread th_master{[=, &home]() {
     const auto seed{chrono::steady_clock::now().time_since_epoch().count() + 1ll};
-    mt19937 generator{seed};
+    mt19937_64 generator{uint64_t(seed)};
     // разброс значений для ценности вещи
     uniform_int_distribution<> distr{0, 10};
     for (size_t n{0u}; n < MAX_MASTER_ITEMS; ++n) {
@@ -451,7 +459,7 @@ void TestModule::lesson6_Task3() {
 
   thread th_thief{[=, &home](){
     const auto seed{chrono::steady_clock::now().time_since_epoch().count() + 2ll};
-    mt19937 generator{seed};
+    mt19937_64 generator{uint64_t(seed)};
     // разброс промежутков времени, через которые вор наведывается к хозяину
     uniform_int_distribution<> distr{16, 21};
     for (size_t n{0u}; n < MAX_THIEF_VISITS; ++n) {
@@ -463,4 +471,78 @@ void TestModule::lesson6_Task3() {
 
   th_master.join();
   th_thief.join();
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson7_Task2() {
+#ifdef ENABLE_PROTOBUF_SECTION
+  using namespace lesson_7;
+  cout << "--- TASK 2 ---" << endl;
+
+  // инициализируем данные
+  pb::StudentGroup group;
+  pb::FullName full_name;
+  full_name.set_name("Vasia");
+  full_name.set_surname("Pupkin");
+
+  auto student = group.add_students();
+  student->add_scores(75);
+  student->add_scores(25);
+  student->add_scores(45);
+  student->mutable_fullname()->Swap(&full_name);
+  const auto &scores_ref{student->scores()};
+  const auto average{
+    accumulate(scores_ref.cbegin(), scores_ref.cend(), 0) / scores_ref.size()};
+  student->set_average_score(average);
+
+  cout << "Before serialization: " << endl;
+  cout << group.DebugString() << endl;
+
+  // выполняем сериализацию
+  string data;
+  group.SerializeToString(&data);
+
+  // выполняем десериализацию
+  group.Clear();
+  group.ParseFromString(data);
+  cout << "After deserialization: " << endl;
+  cout << group.DebugString() << endl << endl;
+#endif // ENABLE_PROTOBUF_SECTION
+}
+
+// --------------------------------------------------------------------------------------
+void TestModule::lesson7_Task3() {
+  using namespace lesson_7;
+  cout << "--- TASK 3 ---" << endl;
+
+  auto getAverageScore = [](const auto &v) {
+    return double(accumulate(v.cbegin(), v.cend(), 0)) / v.size();
+  };
+
+  // инициализируем данные
+  FullName full_name_st1;
+  full_name_st1.name = string{"Vasia"};
+  full_name_st1.surname = string{"Pupkin"};
+  FullName full_name_st2;
+  full_name_st2.name = string{"Pavel"};
+  full_name_st2.surname = string{"Morozov"};
+  full_name_st2.patronymic = string{"Petrovich"};
+
+  Student student_st1;
+  student_st1.full_name = full_name_st1;
+  student_st1.scores = {75, 25, 45};
+  student_st1.average_score = getAverageScore(student_st1.scores);
+  Student student_st2;
+  student_st2.full_name = full_name_st2;
+  student_st2.scores = {35, 50, 95};
+  student_st2.average_score = getAverageScore(student_st2.scores);
+
+  StudentsGroup group{{student_st1, student_st2}};
+  cout << "Before serialization: " << endl;
+  cout << group.GetAllInfo() << endl;
+  group.Save();
+
+  group.Open();
+  cout << "After deserialization: " << endl;
+  cout << group.GetAllInfo() << endl;
 }
