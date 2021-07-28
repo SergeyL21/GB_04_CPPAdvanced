@@ -29,9 +29,8 @@ set(OTHER_FILES
 if (CMAKE_ENABLE_PROTOBUF_SECTION)
   add_definitions(-DENABLE_PROTOBUF_SECTION)
   list(APPEND SOURCE_FILES protobuf/data.pb.cc)
-  #include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 
-  include(protobuf/conan/conanbuildinfo.cmake)
   add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
 
   target_include_directories(${PROJECT_NAME} PUBLIC ${CONAN_INCLUDE_DIRS_PROTOBUF})
