@@ -11,6 +11,10 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef ENABLE_GOOGLE_TEST_SECTION
+#include <gtest/gtest.h>
+#endif // ENABLE_GOOGLE_TEST_SECTION
+
 // ---------------------------------------------------------------------------
 // вспомогательный макрос для обозначения передачи по ссылке
 #undef OUT

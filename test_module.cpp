@@ -513,7 +513,9 @@ void TestModule::lesson7_Task2() {
 // --------------------------------------------------------------------------------------
 void TestModule::lesson7_Task3() {
   using namespace lesson_7;
+#ifndef ENABLE_GOOGLE_TEST_SECTION
   cout << "--- TASK 3 ---" << endl;
+#endif //ENABLE_GOOGLE_TEST_SECTION
 
   auto getAverageScore = [](const auto &v) {
     return double(accumulate(v.cbegin(), v.cend(), 0)) / v.size();
@@ -537,12 +539,39 @@ void TestModule::lesson7_Task3() {
   student_st2.scores = {35, 50, 95};
   student_st2.average_score = getAverageScore(student_st2.scores);
 
-  StudentsGroup group{{student_st1, student_st2}};
+  StudentsGroup group_A{{student_st1, student_st2}};
+#ifndef ENABLE_GOOGLE_TEST_SECTION
   cout << "Before serialization: " << endl;
-  cout << group.GetAllInfo() << endl;
-  group.Save();
+  cout << group_A.GetAllInfo() << endl;
+#endif //ENABLE_GOOGLE_TEST_SECTION
+  group_A.Save();
 
-  group.Open();
+  StudentsGroup group_B{};
+  group_B.Open();
+#ifndef ENABLE_GOOGLE_TEST_SECTION
   cout << "After deserialization: " << endl;
   cout << group.GetAllInfo() << endl;
+#else
+  ASSERT_EQ(group_A.Size(), group_B.Size());
+  const auto student_res_1 = group_B.Find(student_st1.full_name);
+  ASSERT_TRUE(nullptr != student_res_1);
+  const auto student_res_2 = group_B.Find(student_st2.full_name);
+  ASSERT_TRUE(nullptr != student_res_2);
+  // проверка первого студента
+  for (size_t n{0u}; n < student_st1.scores.size(); ++n) {
+    SCOPED_TRACE(n);
+    ASSERT_EQ(student_st1.scores[n], student_res_1->scores[n]);
+  }
+  ASSERT_NEAR(student_st1.average_score,
+              student_res_1->average_score,
+              numeric_limits<double>::epsilon());
+  // проверка второго студента
+  for (size_t n{0u}; n < student_st2.scores.size(); ++n) {
+    SCOPED_TRACE(n);
+    ASSERT_EQ(student_st2.scores[n], student_res_2->scores[n]);
+  }
+  ASSERT_NEAR(student_st2.average_score,
+              student_res_2->average_score,
+              numeric_limits<double>::epsilon());
+#endif //ENABLE_GOOGLE_TEST_SECTION
 }

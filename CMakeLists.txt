@@ -8,6 +8,8 @@ set(CXX_STANDARD_REQUIRED ON)
 
 # включение сборки и тестирования с protobuf
 set(CMAKE_ENABLE_PROTOBUF_SECTION OFF)
+# включение сборки с google test
+set(CMAKE_ENABLE_GOOGLE_TEST_SECTION ON)
 
 set(SOURCE_FILES
   main.cpp
@@ -36,6 +38,14 @@ if (CMAKE_ENABLE_PROTOBUF_SECTION)
 
   target_include_directories(${PROJECT_NAME} PUBLIC ${CONAN_INCLUDE_DIRS_PROTOBUF})
   target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS_PROTOBUF}/libprotobuf.lib)
+elseif (CMAKE_ENABLE_GOOGLE_TEST_SECTION)
+  add_definitions(-DENABLE_GOOGLE_TEST_SECTION)
+  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+
+  add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
+
+  target_include_directories(${PROJECT_NAME} PUBLIC ${CONAN_INCLUDE_DIRS_GTEST})
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS_GTEST}/gtest.lib)
 else()
   add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
 endif()

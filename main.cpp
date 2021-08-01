@@ -9,6 +9,12 @@
 
 #include "test_module.h"
 
+#ifdef ENABLE_GOOGLE_TEST_SECTION
+TEST(Lesson_08, test_for_lesson7_Task3) {
+  TestModule::lesson7_Task3();
+}
+#endif //ENABLE_GOOGLE_TEST_SECTION
+
 // --------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
   UNUSED(argc)
@@ -16,8 +22,6 @@ int main(int argc, char *argv[]) {
 
   setlocale(LC_ALL, "Russian");
 
-  TestModule::lesson7_Task2();
-  TestModule::lesson7_Task3();
-
-  return 0;
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
