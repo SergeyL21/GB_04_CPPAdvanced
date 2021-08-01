@@ -62,7 +62,7 @@ struct Student {
 // --------------------------------------------------------------------------------------
 class StudentsGroup : public IRepository, public IMethods {
 public:
-  StudentsGroup(const std::vector<Student> &students);
+  StudentsGroup(const std::vector<Student> &students = {});
   virtual ~StudentsGroup() = default;
 
   // реализация интерфейса IRepository
@@ -76,6 +76,7 @@ public:
 
   // собственные методы StudentsGroup
   void Clear();
+  inline const std::size_t Size() const { return m_students.size(); }
   const Student *Find(const FullName &name) const;
 
 private:
