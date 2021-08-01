@@ -29,26 +29,28 @@ set(OTHER_FILES
   protobuf/data.proto
 )
 
+set(LOCAL_INCLUDE_DIRS)
+set(LOCAL_LINK_LIBS)
+
 if (CMAKE_ENABLE_PROTOBUF_SECTION)
   add_definitions(-DENABLE_PROTOBUF_SECTION)
   list(APPEND SOURCE_FILES protobuf/data.pb.cc)
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+  list(APPEND LOCAL_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS_PROTOBUF})
+  list(APPEND LOCAL_LINK_LIBS ${CONAN_LIB_DIRS_PROTOBUF}/libprotobuf.lib)
+endif()
 
-  add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
-
-  target_include_directories(${PROJECT_NAME} PUBLIC ${CONAN_INCLUDE_DIRS_PROTOBUF})
-  target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS_PROTOBUF}/libprotobuf.lib)
-elseif (CMAKE_ENABLE_GOOGLE_TEST_SECTION)
+if (CMAKE_ENABLE_GOOGLE_TEST_SECTION)
   add_definitions(-DENABLE_GOOGLE_TEST_SECTION)
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-
-  add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
-
-  target_include_directories(${PROJECT_NAME} PUBLIC ${CONAN_INCLUDE_DIRS_GTEST})
-  target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIB_DIRS_GTEST}/gtest.lib)
-else()
-  add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
+  list(APPEND LOCAL_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS_GTEST})
+  list(APPEND LOCAL_LINK_LIBS ${CONAN_LIB_DIRS_GTEST}/gtest.lib)
 endif()
+
+add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${OTHER_FILES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${LOCAL_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LOCAL_LINK_LIBS})
 
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy

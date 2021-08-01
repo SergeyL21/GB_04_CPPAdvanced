@@ -22,6 +22,10 @@ int main(int argc, char *argv[]) {
 
   setlocale(LC_ALL, "Russian");
 
+#ifdef ENABLE_GOOGLE_TEST_SECTION
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
+#else
+  return 0;
+#endif
 }

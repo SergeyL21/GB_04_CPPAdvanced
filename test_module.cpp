@@ -550,7 +550,7 @@ void TestModule::lesson7_Task3() {
   group_B.Open();
 #ifndef ENABLE_GOOGLE_TEST_SECTION
   cout << "After deserialization: " << endl;
-  cout << group.GetAllInfo() << endl;
+  cout << group_B.GetAllInfo() << endl;
 #else
   ASSERT_EQ(group_A.Size(), group_B.Size());
   const auto student_res_1 = group_B.Find(student_st1.full_name);
